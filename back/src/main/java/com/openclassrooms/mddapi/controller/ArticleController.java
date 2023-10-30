@@ -2,6 +2,7 @@ package com.openclassrooms.mddapi.controller;
 
 
 import com.openclassrooms.mddapi.dto.ArticleDTO;
+import com.openclassrooms.mddapi.dto.ArticleSimpleDTO;
 import com.openclassrooms.mddapi.model.Article;
 import com.openclassrooms.mddapi.model.Theme;
 import com.openclassrooms.mddapi.model.User;
@@ -51,7 +52,7 @@ public class ArticleController {
             return ResponseEntity.badRequest().body("User not found");
         }
 
-        Set<Object[]> articles = articleService.findArticlesByThemesWithDetails(user.get().getThemes());
+        Set<ArticleSimpleDTO> articles = articleService.findArticlesByThemesWithDetails(user.get().getThemes());
 
         //List<ArticleComplexeDTO> articlesCompDto = articles.stream().map(article -> new ArticleComplexeDTO(article)).collect(Collectors.toList());
         return new ResponseEntity<>(Map.of("articles", articles), HttpStatus.OK);
