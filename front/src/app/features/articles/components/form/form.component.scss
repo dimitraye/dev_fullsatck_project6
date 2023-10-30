@@ -1,0 +1,52 @@
+.card-grey {
+    background: #F5F5F5;
+    min-height: 180px;
+    }
+
+    .link-size{
+
+        font-size: 30px;
+
+    }
+    .link-purple {
+        color: #6C5CCF;
+
+    }
+
+    .link-black {
+        color: black;
+    }
+
+    .btn-purple {
+        background-color: #7763C5;
+        color: white;
+    }
+
+    .btn-full-width {
+        width: 100%;
+    }
+
+    .offcanvas-body .col {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    .comment-area {
+        background-color: #eeee;
+        border-radius: 5%;
+        min-height: 100px;
+    }
+    .fa-paper-plane {
+        font-size: 20px;
+    }
+
+    .navbar {
+        border-bottom: 1px solid #000;
+        height: 10vh;
+    }
+
+    .logo {
+        max-height: 100%;
+    }
