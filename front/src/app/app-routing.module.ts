@@ -17,14 +17,14 @@ import { LoginComponent } from './features/auth/components/login/login.component
 const routes: Routes = [
   { path: '', component: ListComponent },
   {
-    path: 'rentals',
-    //canActivate: [AuthGuard],
-    loadChildren: () => import('./features/rentals/rentals.module').then(m => m.RentalsModule)
-  },
-  {
     path: 'articles',
     //canActivate: [AuthGuard],
     loadChildren: () => import('./features/articles/articles.module').then(m => m.ArticlesModule)
+  },
+  {
+    path: 'rentals',
+    //canActivate: [AuthGuard],
+    loadChildren: () => import('./features/rentals/rentals.module').then(m => m.RentalsModule)
   },
   {
     path: 'themes',
