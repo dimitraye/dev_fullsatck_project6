@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.repository;
 
+import com.openclassrooms.mddapi.dto.ArticleSimpleDTO;
 import com.openclassrooms.mddapi.model.Article;
 import com.openclassrooms.mddapi.model.Theme;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,10 +29,17 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     )
     Set<Article> findArticlesByThemeIds(@Param("themeIds") List<Long> themeIds);
 
-    @Query("SELECT DISTINCT a.title, a.createdAt, a.content, u.userName " +
+    @Query("SELECT DISTINCT a.id, a.title, a.createdAt, a.content, u.userName " +
             "FROM Article a " +
             "JOIN a.theme t " +
             "JOIN a.user u " +
             "WHERE t IN :themes")
-    Set<Object[]> findArticlesByThemesWithDetails(@Param("themes") Set<Theme> themes);
+    Set<Object[]> find_ArticlesByThemesWithDetails(@Param("themes") Set<Theme> themes);
+
+    @Query("SELECT NEW com.openclassrooms.mddapi.dto.ArticleSimpleDTO(a.id, a.title, a.content, a.createdAt, u.userName) " +
+            "FROM Article a " +
+            "JOIN a.theme t " +
+            "JOIN a.user u " +
+            "WHERE t IN :themes")
+    Set<ArticleSimpleDTO> findArticlesByThemesWithDetails(@Param("themes") Set<Theme> themes);
 }

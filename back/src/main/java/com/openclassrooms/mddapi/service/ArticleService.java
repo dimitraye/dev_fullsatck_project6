@@ -1,6 +1,7 @@
 package com.openclassrooms.mddapi.service;
 
 
+import com.openclassrooms.mddapi.dto.ArticleSimpleDTO;
 import com.openclassrooms.mddapi.model.Article;
 import com.openclassrooms.mddapi.model.Theme;
 import com.openclassrooms.mddapi.repository.ArticleRepository;
@@ -25,7 +26,7 @@ public class ArticleService {
         return articleRepository.findArticlesByThemes(themes);
     }
 
-    public Set<Object[]> findArticlesByThemesWithDetails(Set<Theme> themes) {
+    public Set<ArticleSimpleDTO> findArticlesByThemesWithDetails(Set<Theme> themes) {
         return  articleRepository.findArticlesByThemesWithDetails(themes);
     }
 
