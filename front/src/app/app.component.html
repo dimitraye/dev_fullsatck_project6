@@ -1,1 +1,67 @@
-<router-outlet></router-outlet>
+<div class="app">
+    <div *ngIf="$isLogged() | async; else notLogged">
+        <nav class="navbar">
+            <a routerLink="/"><img src="assets/inscription_cloud.png" alt="Logo"></a>
+            <ul class="nav justify-content-end">
+                <li class="nav-item d-none d-md-block">
+                  <a class="nav-link link-purple link-size " routerLink="/">Articles</a>
+                </li>
+                <li class="nav-item d-none d-md-block">
+                    <a class="nav-link link-black link-size" routerLink="/themes">Thèmes</a>
+                </li>
+                <li class="nav-item d-none d-md-block">
+                    <a class="nav-link" routerLink="/me"><img src="assets/user.png" alt="user photo"></a>
+                </li>
+                
+                <li class="nav-item mr-3 mt-2 link-size d-block d-sm-block d-md-none">
+                    <a class="nav-link link-black" data-bs-toggle="offcanvas" routerLink="#offcanvasExample">
+                        <i class="fa-solid fa-bars"></i>
+                    </a>
+                </li>
+              </ul>
+        </nav>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+
+            <div class="offcanvas-body">
+                <div class="col text-end">
+                    <div>
+                        <p>
+                            <a class="nav-link link-black link-size " routerLink="/">Articles</a>
+                        </p>
+                        <p>
+                            <a class="nav-link link-black link-size" routerLink="/themes">Thèmes</a>
+                        </p>
+                    </div>
+                    <a class="nav-link" routerLink="/me"><img src="assets/user.png" alt="user photo"></a>
+                </div>
+    
+            </div>
+        </div>  
+        <div>
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+      <ng-template #notLogged>
+        <!-- Contenu principal -->
+        <div class="container my-5 text-center mt-5">
+        <!-- Première div avec une image -->
+        <div>
+            <img src="assets/accueil_cloud..png" alt="Image d'accueil" class="img-fluid">
+        </div>
+        
+        <!-- Deuxième div avec des boutons personnalisés -->
+        <div class="btn-container row">
+            <div class="col-lg-2 offset-lg-4 col-md-3 offset-md-3 col-sm-8 offset-sm-2 col-xs-8 mt-4 mb-2"> <!-- ensures button takes full width on small screens and below -->
+                <a routerLink="login" class="btn btn-black-white">Se connecter</a>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-8 offset-sm-2 col-xs-8 mb-2 mt-4">
+                <a routerLink="register" class="btn btn-black-white">S'inscrire</a>
+            </div>
+        </div>
+
+
+    </div>
+      </ng-template>
+    
+  </div>
