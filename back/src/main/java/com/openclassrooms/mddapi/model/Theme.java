@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -30,4 +31,17 @@ public class Theme {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "themes")
+    private Set<User> users = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "Theme{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

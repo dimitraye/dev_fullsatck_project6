@@ -21,12 +21,32 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
+
     private String email;
     private  String userName;
     private String password;
 
-    @OneToMany
+    /*@OneToMany
     @JsonIgnore
+    private Set<Theme> themes = new HashSet<>();*/
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "user_theme",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "theme_id")
+    )
     private Set<Theme> themes = new HashSet<>();
 
     @OneToMany(mappedBy = "user")

@@ -1,11 +1,18 @@
 package com.openclassrooms.mddapi;
 
 import com.openclassrooms.mddapi.config.RsaKeyProperties;
+import com.openclassrooms.mddapi.model.Article;
+import com.openclassrooms.mddapi.model.Commentary;
 import com.openclassrooms.mddapi.model.Theme;
+import com.openclassrooms.mddapi.model.User;
+import com.openclassrooms.mddapi.repository.ArticleRepository;
+import com.openclassrooms.mddapi.repository.CommentaryRepository;
 import com.openclassrooms.mddapi.repository.ThemeRepository;
+import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.service.ArticleService;
 import com.openclassrooms.mddapi.service.ThemeService;
 import com.openclassrooms.mddapi.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,12 +20,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @EnableConfigurationProperties(RsaKeyProperties.class)
 @SpringBootApplication
 public class MddApiApplication {
+
+	@Autowired
+	private PasswordEncoder encoder;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MddApiApplication.class, args);
@@ -26,54 +35,73 @@ public class MddApiApplication {
 
 
 	@Bean
-	CommandLineRunner runner(PasswordEncoder encoder,
-							 UserService userService,
+	CommandLineRunner runner(UserService userService,
 							 ThemeService themeService,
 							 ThemeRepository themeRepository,
-							 ArticleService articleService) {
+							 ArticleService articleService,
+							 ArticleRepository articleRepository,
+							 UserRepository userRepository,
+							 CommentaryRepository commentaryRepository) {
 
 		return args -> {
-			//--------------
-			/*List<User> users = new ArrayList<>();
-			List<User> usersFromDB = new ArrayList<>();
-			List<Rental> rentals = new ArrayList<>();
 
+			///////////////////////////////GENERATION THEMES/////////////////////////////////////
 
-			List<String> firstnames = List.of("user", "admin", "Jean", "Anna", "Olivier", "Sophie", "Omar", "Greg");
-			for (int i =0; i < 8; i++) {
-				User user = new User();
-				user.setName(firstnames.get(i));
-				user.setPassword(firstnames.get(i));
-				user.setEmail(firstnames.get(i).toLowerCase() + "@mail.com");
-				//user.setPassword(encoder.encode(firstnames.get(i)));
-				log.info("Tour: " + i);
-				log.info("user:"+ user.getEmail());
-				users.add(user);
-			}
-			try {
-				log.info("users:"+ users);
-				users.forEach(user -> {
-					User userFromDB = userService.save(user);
-					System.out.println("User saved, " + userFromDB);
+			Set<Theme> themes = generateSampleThemes();
+			List<Theme> savedThemeList = themeRepository.saveAll(themes);
+			Set<Theme> savedThemes = new HashSet<>(savedThemeList);
 
-					usersFromDB.add(userFromDB);
-				});
-				log.info("usersFromDB:"+ usersFromDB);
+			///////////////////////////////GENERATION USERS/////////////////////////////////////
+			List<User> users = generateSampleUsers();
+			// Nombre d'éléments aléatoires à extraire pour chaque utilisateur
+			int numRandomThemes = 2; // Vous pouvez modifier cela selon vos besoins
 
-				System.out.println("Users Saved!");
+			// Attribution des thèmes aléatoires à chaque utilisateur
+			users.forEach(user -> {
+				List<Theme> randomThemes = new ArrayList<>(savedThemes); // Créez une copie de savedThemes
 
-			} catch (Exception e){
-				System.out.println("Unable to save users: " + e.getMessage());
-			}*/
+				// Mélangez la liste des thèmes
+				Collections.shuffle(randomThemes);
 
-			List<Theme> themes = generateSampleThemes();
-			themeRepository.saveAll(themes);
+				// Extrayez un certain nombre de thèmes aléatoires
+				List<Theme> randomThemes1 = randomThemes.subList(0, numRandomThemes);
+				user.setThemes(new HashSet<>(randomThemes1));
+			});
+			System.out.println("---------------users before save");
+			users.forEach(user -> {
+				System.out.println(user);
+				user.getThemes().forEach(theme -> System.out.println(theme));
+			});
+			List<User> savedUsers = userRepository.saveAll(users);
 
+			///////////////////////////////GENERATION Articles/////////////////////////////////////
+			List<Article> articles = generateSampleArticles();
+			// Générateur de nombres aléatoires
+			Random random = new Random();
+
+			articles.forEach(article -> {
+				// Récupérez un thème aléatoire
+				Theme randomTheme = savedThemeList.get(random.nextInt(savedThemeList.size()));
+				User randomUser = savedUsers.get(random.nextInt(savedUsers.size()));
+				article.setTheme(randomTheme);
+				article.setUser(randomUser);
+			});
+			List<Article> savedArticles = articleRepository.saveAll(articles);
+
+			///////////////////////////////GENERATION Commentaries/////////////////////////////////////
+			List<Commentary> commentaries = generateSampleCommentaries();
+			commentaries.forEach(commentary -> {
+				Article randomArticle = savedArticles.get(random.nextInt(savedArticles.size()));
+				User randomUser = savedUsers.get(random.nextInt(savedUsers.size()));
+				commentary.setArticle(randomArticle);
+				commentary.setUser(randomUser);
+			});
+			commentaryRepository.saveAll(commentaries);
 		};
 	}
 
-	public List<Theme> generateSampleThemes() {
-		List<Theme> themes = new ArrayList<>();
+	public Set<Theme> generateSampleThemes() {
+		Set<Theme> themes = new HashSet<>();
 
 		Theme theme1 = new Theme();
 		theme1.setTitle("Science");
@@ -94,6 +122,43 @@ public class MddApiApplication {
 		themes.add(theme3);
 
 		return themes;
+	}
+	public List<User> generateSampleUsers() {
+		List<User> users = new ArrayList<>();
+
+		List<String> userNames = List.of("user", "admin", "Jean", "Anna", "Olivier", "Sophie", "Omar", "Greg");
+		for (int i =0; i < 8; i++) {
+			User user = new User();
+			user.setUserName(userNames.get(i));
+			user.setEmail(userNames.get(i).toLowerCase() + "@mail.com");
+			user.setPassword(encoder.encode(userNames.get(i)));
+			users.add(user);
+		}
+		users.forEach(user -> System.out.println(user));
+		return users;
+	}
+
+	public List<Article> generateSampleArticles() {
+		List<Article> articles = new ArrayList<>();
+
+		for (int i = 1; i <= 5; i++) { // Par exemple, générez 5 articles
+			Article article = new Article();
+			article.setTitle("Article " + i);
+			article.setContent("Contenu de l'article " + i);
+			articles.add(article);
+		}
+
+		return articles;
+	}
+
+	public List<Commentary> generateSampleCommentaries() {
+		List<Commentary> commentaries = new ArrayList<>();
+
+		Commentary commentary1 = new Commentary();
+		commentary1.setContent("Contenu du commentaire 1");
+
+		commentaries.add(commentary1);
+		return commentaries;
 	}
 
 
