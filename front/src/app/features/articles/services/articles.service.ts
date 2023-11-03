@@ -1,12 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Rental } from 'src/app/features/rentals/interfaces/rental.interface';
-import { RentalResponse } from '../interfaces/api/rentalResponse.interface';
-import { RentalsResponse } from '../interfaces/api/rentalsResponse.interface';
-import { ArticleResponse } from '../interfaces/api/articleResponse.interface';
-import { Article } from '../interfaces/article.interface';
 import { ArticlesResponse } from '../interfaces/api/articlesResponse.interface';
+import { ArticleView } from '../interfaces/article.view.interface';
+import { ArticleResponseCreate } from '../interfaces/api/articleResponse.create.interface';
+import { ArticleCreate } from '../interfaces/article.create.interface';
 
 
 @Injectable({
@@ -22,15 +20,11 @@ export class ArticlesService {
     return this.httpClient.get<ArticlesResponse>(this.pathService);
   }
 
-  public detail(id: string): Observable<Article> {
-    return this.httpClient.get<Article>(`${this.pathService}/${id}`);
+  public detail(id: string): Observable<ArticleView> {
+    return this.httpClient.get<ArticleView>(`${this.pathService}/${id}`);
   }
 
-  public create(form: FormData): Observable<ArticleResponse> {
-    return this.httpClient.post<ArticleResponse>(this.pathService, form);
+  public create(form: ArticleCreate): Observable<ArticleResponseCreate> {
+    return this.httpClient.post<ArticleResponseCreate>(this.pathService, form);
   }
-
-  /*public update(id: string, form: FormData): Observable<RentalResponse> {
-    return this.httpClient.put<RentalResponse>(`${this.pathService}/${id}`, form);
-  }*/
 }

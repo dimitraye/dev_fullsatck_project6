@@ -13,9 +13,6 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent  {
-  public hide = true;
-  public onError = false;
-
   public form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.min(3)]]
@@ -28,16 +25,17 @@ export class LoginComponent  {
 
   public submit(): void {
     const loginRequest = this.form.value as LoginRequest;
+    console.log("loginRequest", loginRequest);
     this.authService.login(loginRequest).subscribe(
       (response: AuthSuccess) => {
         localStorage.setItem('token', response.token);
         this.authService.me().subscribe((user: User) => {
           this.sessionService.logIn(user);
-          this.router.navigate(['/rentals'])
+          this.router.navigate(['/articles'])
         });
-        this.router.navigate(['/rentals'])
+        this.router.navigate(['/articles'])
       },
-      error => this.onError = true
+      error => console.log("Error", error)
     );
   }
 }

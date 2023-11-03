@@ -1,7 +1,6 @@
 package com.openclassrooms.mddapi.controller;
 
 
-import com.openclassrooms.mddapi.dto.UserDTO;
 import com.openclassrooms.mddapi.dto.UserDetailsDTO;
 import com.openclassrooms.mddapi.model.Theme;
 import com.openclassrooms.mddapi.model.User;
@@ -113,7 +112,7 @@ public class UserController {
             return ResponseEntity.badRequest().body("User not found");
         }
 
-        return new ResponseEntity<>(new UserDTO(user.get()), HttpStatus.OK);
+        return new ResponseEntity<>(new UserDetailsDTO(user.get()), HttpStatus.OK);
     }
 
     @GetMapping("/themes/{id}")
@@ -162,7 +161,7 @@ public class UserController {
         UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
         userDetailsDTO.setId(userFromDB.getId());
         userDetailsDTO.setEmail(userFromDB.getEmail());
-        userDetailsDTO.setUsername(userFromDB.getUserName());
+        userDetailsDTO.setUserName(userFromDB.getUserName());
         userDetailsDTO.setThemes(userFromDB.getThemes());
 
         return ResponseEntity.ok(userDetailsDTO);
@@ -182,6 +181,7 @@ public class UserController {
 
         log.debug("Set properties in the object userFromDB.");
         userFromDB.setUserName(user.getUserName());
+        userFromDB.setEmail(user.getEmail());
 
 
         log.info("Updating a user");

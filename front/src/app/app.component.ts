@@ -24,8 +24,7 @@ export class AppComponent implements OnInit {
   }
 
   public $isLogged(): Observable<boolean> {
-    //return this.sessionService.$isLogged();
-    return of(false);
+    return this.sessionService.$isLogged();
   }
 
   public logout(): void {
@@ -42,5 +41,13 @@ export class AppComponent implements OnInit {
         this.sessionService.logOut();
       }
     )
+  }
+
+  isAuthPage(): Observable<boolean> {
+    // Vérifie si l'URL courante correspond à la page de login ou d'inscription
+    return new Observable(observer => {
+      observer.next(this.router.url === '/login' || this.router.url === '/register');
+      observer.complete();
+    });
   }
 }

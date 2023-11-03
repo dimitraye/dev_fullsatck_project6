@@ -3,136 +3,33 @@
 
     <div class="d-flex justify-content-between mb-3">
 
-
     </div>
 
         <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="card card-grey">
-                    <div class="card-body">
-                        <h3>Titre du thème</h3>
-                        <div class="">
-                            <div class="row">
-
-                                <div>
-                                    <p>
-                                        Description: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard...
-                                    </p>
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-purple">S'abonner</button>
+            <ng-container *ngFor="let theme of (themes$ | async)?.themes" >
+                <div class="col-md-6 mb-3">
+                    <div class="card card-grey">
+                        <div class="card-body">
+                            <h3>{{theme.title}}</h3>
+                            <div class="">
+                                <div class="row">
+    
+                                    <div>
+                                        <p>
+                                            {{theme.description}}
+                                        </p>
+                                        <div class="text-center">
+                                            <button type="submit" 
+                                            class="btn btn-purple" 
+                                            (click)="subscribeToTheme(theme.id)">S'abonner</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                  </div>
-            </div>
-          
-            <div class="col-md-6 mb-3">
-                <div class="card card-grey">
-                    <div class="card-body">
-                        <h3>Titre du thème</h3>
-                        <div class="">
-                            <div class="row">
-
-                                <div>
-                                    <p>
-                                        Description: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard...
-                                    </p>
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-purple">S'abonner</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="card card-grey">
-                    <div class="card-body">
-                        <h3>Titre du thème</h3>
-                        <div class="">
-                            <div class="row">
-
-                                <div>
-                                    <p>
-                                        Description: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard...
-                                    </p>
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-purple">S'abonner</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-            </div>
-          
-            <div class="col-md-6 mb-3">
-                <div class="card card-grey">
-                    <div class="card-body">
-                        <h3>Titre du thème</h3>
-                        <div class="">
-                            <div class="row">
-
-                                <div>
-                                    <p>
-                                        Description: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard...
-                                    </p>
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-purple">S'abonner</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-            </div>
-
-
-            <div class="col-md-6 mb-3">
-                <div class="card card-grey">
-                    <div class="card-body">
-                        <h3>Titre du thème</h3>
-                        <div class="">
-                            <div class="row">
-
-                                <div>
-                                    <p>
-                                        Description: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard...
-                                    </p>
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-purple">S'abonner</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-            </div>
-          
-            <div class="col-md-6 mb-3">
-                <div class="card card-grey">
-                    <div class="card-body">
-                        <h3>Titre du thème</h3>
-                        <div class="">
-                            <div class="row">
-
-                                <div>
-                                    <p>
-                                        Description: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard...
-                                    </p>
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-purple">S'abonner</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-            </div>
+                      </div>
+                </div>
+            </ng-container>
 
         </div>
 

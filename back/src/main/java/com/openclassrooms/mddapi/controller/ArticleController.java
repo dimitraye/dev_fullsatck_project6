@@ -1,6 +1,7 @@
 package com.openclassrooms.mddapi.controller;
 
 
+import com.openclassrooms.mddapi.dto.ArticleComplexeDTO;
 import com.openclassrooms.mddapi.dto.ArticleDTO;
 import com.openclassrooms.mddapi.dto.ArticleSimpleDTO;
 import com.openclassrooms.mddapi.model.Article;
@@ -68,12 +69,13 @@ public class ArticleController {
     public ResponseEntity<?> find(@PathVariable Long id){
         Article articleFromDB = articleService.getById(id).orElse(null);
 
+
         if(articleFromDB == null) {
             log.error("Error : id Article doesn't exist in the Data Base.");
             return ResponseEntity.badRequest().body("User not found");        }
 
         log.info("Returning the article's informations");
-        return new ResponseEntity<>(articleFromDB, HttpStatus.OK);
+        return new ResponseEntity<>(new ArticleComplexeDTO(articleFromDB), HttpStatus.OK);
     }
 
     @PostMapping

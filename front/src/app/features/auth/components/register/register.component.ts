@@ -14,11 +14,9 @@ import { User } from 'src/app/interfaces/user.interface';
 })
 export class RegisterComponent {
 
-  public onError = false;
-
   public form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    name: ['', [Validators.required, Validators.min(3)]],
+    userName: ['', [Validators.required, Validators.min(3)]],
     password: ['', [Validators.required, Validators.min(3)]]
   });
 
@@ -29,15 +27,19 @@ export class RegisterComponent {
 
   public submit(): void {
     const registerRequest = this.form.value as RegisterRequest;
+    console.log("registerRequest", registerRequest);
     this.authService.register(registerRequest).subscribe(
       (response: AuthSuccess) => {
+        console.log('Réponse du backend:', response);
         localStorage.setItem('token', response.token);
         this.authService.me().subscribe((user: User) => {
           this.sessionService.logIn(user);
-          this.router.navigate(['/rentals'])
+          this.router.navigate(['/articles'])
         });
       },
-      error => this.onError = true
+      (error) => {
+        console.error("Erreur lors de l'appel au backend:", error);
+      }
     );
   }
 

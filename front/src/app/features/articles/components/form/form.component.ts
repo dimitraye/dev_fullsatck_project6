@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SessionService } from 'src/app/services/session.service';
-import { RentalResponse } from '../../interfaces/api/rentalResponse.interface';
-import { Rental } from '../../interfaces/rental.interface';
-import { RentalsService } from '../../services/articles.service';
+import { Router } from '@angular/router';
+import { ArticleResponseCreate } from '../../interfaces/api/articleResponse.create.interface';
+import { Theme } from '../../../themes/interfaces/theme.interface';
+import { ArticlesService } from '../../services/articles.service';
+import { ThemesService } from 'src/app/features/themes/services/themes.service';
+import { Observable } from 'rxjs';
+import { ThemesResponse } from 'src/app/features/themes/interfaces/api/themesResponse.interface';
+import { ArticleCreate } from '../../interfaces/article.create.interface';
 
 @Component({
   selector: 'app-form',
@@ -14,74 +17,52 @@ import { RentalsService } from '../../services/articles.service';
 })
 export class FormComponent implements OnInit {
 
-  public onUpdate: boolean = false;
-  public rentalForm: FormGroup | undefined;
-
-  private id: string | undefined;
-
+  public articleForm: FormGroup | undefined;
+  public themes$!: Observable<ThemesResponse>;
   constructor(
-    private route: ActivatedRoute,
     private fb: FormBuilder,
     private matSnackBar: MatSnackBar,
-    private rentalsService: RentalsService,
-    private sessionService: SessionService,
-    private router: Router
+    private articlesService: ArticlesService,
+    private router: Router,
+    private themeService : ThemesService
   ) {
   }
 
   public ngOnInit(): void {
-    const url = this.router.url;
-    if (url.includes('update')) {
-      this.onUpdate = true;
-      this.id = this.route.snapshot.paramMap.get('id')!;
-      this.rentalsService
-        .detail(this.id)
-        .subscribe((rental: Rental) => this.initForm(rental));
-    } else {
-      this.initForm();
-    }
+    this.themes$ = this.themeService.all();  
+    this.initForm();
   }
 
   public submit(): void {
-    const formData = new FormData();
-    formData.append('name', this.rentalForm!.get('name')?.value);
-    formData.append('surface', this.rentalForm!.get('surface')?.value);
-    formData.append('price', this.rentalForm!.get('price')?.value);
-    if (!this.onUpdate) {
-      formData.append('picture', this.rentalForm!.get('picture')?.value._files[0]);
-    }
-    formData.append('description', this.rentalForm!.get('description')?.value);
-
-    if (!this.onUpdate) {
-      this.rentalsService
-        .create(formData)
-        .subscribe((rentalResponse: RentalResponse) => this.exitPage(rentalResponse));
-    } else {
-      this.rentalsService
-        .update(this.id!, formData)
-        .subscribe((rentalResponse: RentalResponse) => this.exitPage(rentalResponse));
-    }
-  }
-
-  private initForm(rental?: Rental): void {
-    console.log(rental);
-    console.log(this.sessionService.user!.id);
-    if(rental && rental?.owner_id !== this.sessionService.user!.id) {
-      this.router.navigate(['/rentals']);
-    }
-    this.rentalForm = this.fb.group({
-      name: [rental ? rental.name : '', [Validators.required]],
-      surface: [rental ? rental.surface : '', [Validators.required]],
-      price: [rental ? rental.price : '', [Validators.required]],
-      description: [rental ? rental.description : '', [Validators.required]],
+    console.log("this.articleForm :", this.articleForm); 
+    let selectedTheme : Theme | undefined;; 
+    this.themes$.subscribe((themesResponse: ThemesResponse) => {
+      selectedTheme = themesResponse.themes.find((theme) => theme.title === this.articleForm?.get('theme')?.value);
+           if (selectedTheme) {
+        const articleData: ArticleCreate = {
+          title: this.articleForm!.get('title')?.value,
+          theme_id: selectedTheme.id, // Utilisez l'ID du thème
+          content: this.articleForm!.get('content')?.value
+        };
+        console.log("articleData :", articleData);
+        this.articlesService
+          .create(articleData)
+          .subscribe((articleResponse: ArticleResponseCreate) => this.exitPage(articleResponse));
+      }
     });
-    if (!this.onUpdate) {
-      this.rentalForm.addControl('picture', this.fb.control('', [Validators.required]));
-    }
+    
   }
 
-  private exitPage(rentalResponse: RentalResponse): void {
-    this.matSnackBar.open(rentalResponse.message, "Close", { duration: 3000 });
-    this.router.navigate(['rentals']);
+  private initForm(): void {
+    this.articleForm = this.fb.group({
+      title: ['', [Validators.required]],
+      theme: ['', [Validators.required]],
+      content: ['', [Validators.required]]
+    });
+  }
+
+  private exitPage(articleResponse: ArticleResponseCreate): void {
+    this.matSnackBar.open("Article créé avec succès", "Close", { duration: 3000 });
+    this.router.navigate(['articles']);
   }
 }

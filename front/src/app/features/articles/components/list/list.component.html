@@ -8,7 +8,10 @@
             </div>
 
             <div class="col-md-6 col-sm-12 text-md-end text-center">
-                <p> <b><span class="mr-3">Trier par</span> <i class="fa fa-arrow-down" aria-hidden="true"></i></b>  </p>
+                <p (click)="toggleIconClick()"> 
+                    <b><span class="mr-3">Trier par</span> 
+                    <i [ngClass]="{'fa-arrow-down': newersFirst, 'fa-arrow-up': !newersFirst}" class="fa" aria-hidden="true"></i></b>  
+                </p>
             </div>
 
         </div>
@@ -18,116 +21,31 @@
         </div>
 
             <div class="row">
-                
-                <div class="col-md-6 mb-3">
-                    <div class="card card-grey">
-                        <div class="card-body">
-                            <h3>Titre de l'article</h3>
-                            <div class="">
-                                <div class="row">
-                                    <!-- Text to the left -->
-                                    <div class="col-5">
-                                        <p>Date</p>
+                <ng-container *ngFor="let article of (articles$ | async)?.articles" >
+                    <div class="col-md-6 mb-3">
+                        <div class="card card-grey" (click)="navigateToDetail(article.id)">
+                            <div class="card-body">
+                                <h3>{{article.title}}</h3>
+                                <div class="">
+                                    <div class="row">
+                                        <!-- Text to the left -->
+                                        <div class="col-5">
+                                            <p>{{article.createdAt | date: 'dd/MM/yyyy' }}</p>
+                                        </div>
                                         
-                                    </div>
-                                    
-                                    <!-- Text in the center (use offset to center it) -->
-                                    <div class="col-7">
-                                        <p>Auteur</p>
-                                    </div>
-                                    <div>
-                                        <p>Content: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled...
-                                        </p>
+                                        <!-- Text in the center (use offset to center it) -->
+                                        <div class="col-7">
+                                            <p>{{article.userName}}</p>
+                                        </div>
+                                        <div>
+                                            <p>{{article.content}}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            
-
-
-                        </div>
-                      </div>
-                  </div>
-              
-                  <div class="col-md-6 mb-3">
-                    <div class="card card-grey">
-                        <div class="card-body">
-                            <h3>Titre de l'article</h3>
-                            <div class="">
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p>Date</p>
-                                        
-                                    </div>
-                                    
-                                    <div class="col-7">
-                                        <p>Auteur</p>
-                                    </div>
-                                    <div>
-                                        <p>Content: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled...
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-
-
-                        </div>
-                      </div>
-                  </div>
-
-                  <div class="col-md-6 mb-3">
-                    <div class="card card-grey">
-                        <div class="card-body">
-                            <h3>Titre de l'article</h3>
-                            <div class="">
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p>Date</p>
-                                        
-                                    </div>
-                                    
-                                    <div class="col-7">
-                                        <p>Auteur</p>
-                                    </div>
-                                    <div>
-                                        <p>Content: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled...
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-
-
-                        </div>
-                      </div>
-                  </div>
-
-
-                  <div class="col-md-6 mb-3">
-                    <div class="card card-grey">
-                        <div class="card-body">
-                            <h3>Titre de l'article</h3>
-                            <div class="">
-                                <div class="row">
-                                    <div class="col-5">
-                                        <p>Date</p>
-                                        
-                                    </div>
-                                    <div class="col-7">
-                                        <p>Auteur</p>
-                                    </div>
-                                    <div>
-                                        <p>Content: lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled...
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-
-
-                        </div>
-                      </div>
-                  </div>
+                          </div>
+                    </div>
+                </ng-container>
 
             </div>
 

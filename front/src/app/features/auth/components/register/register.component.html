@@ -10,21 +10,21 @@
             <h1>Inscription</h1>
         </div>
         <div class="col-md-4 offset-md-4">
-            <form>
+            <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="form">
                 <div class="mb-3 me-2 ms-2 col-sm-12">
                     <label for="nomUtilisateur" >Nom d'utilisateur</label>
-                    <input type="text" class="form-control" id="nomUtilisateur">
+                    <input type="text" class="form-control" id="nomUtilisateur" formControlName="userName">
                 </div>
                 <div class="mb-3 me-2 ms-2 col-sm-12">
                     <label for="nomUtilisateur"> Adresse e-mail</label>
-                    <input type="text" class="form-control" id="nomUtilisateur">
+                    <input type="text" class="form-control" id="nomUtilisateur" formControlName="email">
                 </div>
                 <div class="mb-3  me-2 ms-2 col-sm-12">
                     <label for="motDePasse">Mot de Passe</label>
-                    <input type="password" class="form-control" id="motDePasse">
+                    <input type="password" class="form-control" id="motDePasse" formControlName="password">
                 </div>
                 <div class="text-center mt-3 ">
-                    <a  href="articles.html" class="btn btn-purple">S'inscrire</a>
+                    <button type="submit" class="btn btn-purple">S'inscrire</button>
                 </div>
             </form>
         </div>

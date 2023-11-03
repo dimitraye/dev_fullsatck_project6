@@ -69,7 +69,7 @@ public class MessageController {
             log.error("Unable to save commentary.", e);
             return ResponseEntity.badRequest().body("Unable to save commentary.");
         }
-        return  new ResponseEntity<>(Map.of("Commentaire :", commentaryDB), HttpStatus.CREATED);
+        return  new ResponseEntity<>(Map.of("message", "Commentaire ajouté"), HttpStatus.CREATED);
     }
 
     //TODO : getCommentariesByArticleId

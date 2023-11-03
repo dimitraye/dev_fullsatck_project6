@@ -7,9 +7,9 @@ import { MessageResponse } from '../interfaces/api/messageResponse.interface';
 @Injectable({
   providedIn: 'root'
 })
-export class MessagesService {
+export class CommentariesService {
 
-  private pathService = 'api/messages';
+  private pathService = 'api/commentaries';
 
   constructor(private httpClient: HttpClient) { }
 

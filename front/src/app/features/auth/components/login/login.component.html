@@ -11,17 +11,17 @@
             <h1>Se connecter</h1>
         </div>
         <div class="col-md-4 offset-md-4">
-            <form>
+            <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="form">
                 <div class="mb-3 me-2 ms-2 col-sm-12">
                     <label for="nomUtilisateur" >E-mail ou nom d'utilisateur</label>
-                    <input type="text" class="form-control" id="nomUtilisateur">
+                    <input type="text" class="form-control" id="nomUtilisateur" formControlName="email">
                 </div>
                 <div class="mb-3  me-2 ms-2 col-sm-12">
                     <label for="motDePasse">Mot de Passe</label>
-                    <input type="password" class="form-control" id="motDePasse">
+                    <input type="password" class="form-control" id="motDePasse" formControlName="password">
                 </div>
                 <div class="text-center mt-3 ">
-                    <a href="articles.html" class="btn btn-purple">Se connecter</a>
+                    <button type="submit" class="btn btn-purple">Se connecter</button>
                 </div>
             </form>
         </div>

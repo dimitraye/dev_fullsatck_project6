@@ -1,5 +1,5 @@
 <div class="app">
-    <div *ngIf="$isLogged() | async; else notLogged">
+    <div *ngIf="!(isAuthPage() | async) && ($isLogged() | async); else notLogged">
         <nav class="navbar">
             <a routerLink="/"><img src="assets/inscription_cloud.png" alt="Logo"></a>
             <ul class="nav justify-content-end">
@@ -38,13 +38,11 @@
     
             </div>
         </div>  
-        <div>
-            <router-outlet></router-outlet>
-        </div>
+        
     </div>
       <ng-template #notLogged>
         <!-- Contenu principal -->
-        <div class="container my-5 text-center mt-5">
+        <div class="container my-5 text-center mt-5" *ngIf="!(isAuthPage() | async)">
         <!-- Première div avec une image -->
         <div>
             <img src="assets/accueil_cloud..png" alt="Image d'accueil" class="img-fluid">
@@ -63,5 +61,7 @@
 
     </div>
       </ng-template>
-    
+      <div>
+        <router-outlet></router-outlet>
+    </div>
   </div>

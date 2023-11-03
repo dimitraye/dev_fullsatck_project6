@@ -20,6 +20,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @EnableConfigurationProperties(RsaKeyProperties.class)
@@ -131,14 +132,14 @@ public class MddApiApplication {
 			User user = new User();
 			user.setUserName(userNames.get(i));
 			user.setEmail(userNames.get(i).toLowerCase() + "@mail.com");
-			user.setPassword(encoder.encode(userNames.get(i)));
+			user.setPassword(encoder.encode(userNames.get(i).toLowerCase()));
 			users.add(user);
 		}
 		users.forEach(user -> System.out.println(user));
 		return users;
 	}
 
-	public List<Article> generateSampleArticles() {
+	/*public List<Article> generateSampleArticles() {
 		List<Article> articles = new ArrayList<>();
 
 		for (int i = 1; i <= 5; i++) { // Par exemple, générez 5 articles
@@ -149,9 +150,32 @@ public class MddApiApplication {
 		}
 
 		return articles;
+	}*/
+
+	public List<Article> generateSampleArticles() {
+		List<Article> articles = new ArrayList<>();
+		Random random = new Random();
+
+		for (int i = 1; i <= 5; i++) { // Par exemple, générez 5 articles
+			Article article = new Article();
+			article.setTitle("Article " + i);
+			article.setContent("Contenu de l'article " + i);
+
+			// Générez des dates aléatoires pour le jour et le mois
+			int randomYear = 2023; // L'année reste la même
+			int randomMonth = random.nextInt(12) + 1; // De 1 à 12 (mois)
+			int randomDay = random.nextInt(28) + 1; // De 1 à 28 (jours)
+
+			LocalDate randomDate = LocalDate.of(randomYear, randomMonth, randomDay);
+			article.setCreatedAt(randomDate.atStartOfDay());
+
+			articles.add(article);
+		}
+
+		return articles;
 	}
 
-	public List<Commentary> generateSampleCommentaries() {
+	public List<Commentary> generateSampleCommentaries_() {
 		List<Commentary> commentaries = new ArrayList<>();
 
 		Commentary commentary1 = new Commentary();
@@ -161,5 +185,21 @@ public class MddApiApplication {
 		return commentaries;
 	}
 
+	public List<Commentary> generateSampleCommentaries() {
+		List<Commentary> commentaries = new ArrayList<>();
 
+		for (int i = 1; i <= 12; i++) {
+			Commentary commentary = new Commentary();
+			commentary.setContent("Contenu du commentaire " + i);
+			commentaries.add(commentary);
+		}
+
+		return commentaries;
+	}
+
+
+	// TODO - Faire le sorting des articles en js/ts et des commentaires
+	// TODO - changer niveau back/front la fonction me pour qu'elle retrouve le user via l'id
+	//  ou rafraichir le Token si on change l'email
+	//   ou
 }

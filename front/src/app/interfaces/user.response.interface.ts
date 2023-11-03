@@ -1,8 +1,6 @@
 import { Theme } from "../features/themes/interfaces/theme.interface";
 
-export interface User {
-	id: number,
+export interface UserResponse {
 	userName: string,
-	email: string,
-	themes : Theme[]
+	email: string
 }
