@@ -18,10 +18,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -43,7 +41,7 @@ public class ArticleController {
      * Find all the rentals when calling this endpoint
      * @return a list of rentals
      */
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<?> findAll(Principal principal) {
         String email = principal.getName();
 
@@ -57,6 +55,26 @@ public class ArticleController {
 
         //List<ArticleComplexeDTO> articlesCompDto = articles.stream().map(article -> new ArticleComplexeDTO(article)).collect(Collectors.toList());
         return new ResponseEntity<>(Map.of("articles", articles), HttpStatus.OK);
+    }*/
+
+    @GetMapping
+    public ResponseEntity<?> findAll(Principal principal) {
+        String email = principal.getName();
+
+        Optional<User> user = userService.findByEmail(email);
+
+        if (user.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        Set<ArticleSimpleDTO> articles = articleService.findArticlesByThemesWithDetails(user.get().getThemes());
+
+        // Triez les articles par date de création (décroissante)
+        List<ArticleSimpleDTO> sortedArticles = articles.stream()
+                .sorted(Comparator.comparing(ArticleSimpleDTO::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(Map.of("articles", sortedArticles), HttpStatus.OK);
     }
 
     /*@GetMapping

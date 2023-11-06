@@ -30,7 +30,7 @@ export class ListComponent {
         //this.sortArticles(response);
         return response;
       })
-    );;
+    );
    }
 
   get user(): User | undefined {
@@ -43,10 +43,10 @@ export class ListComponent {
       map((response: ArticlesResponse) => {
         if (this.newersFirst) {
           // Trier les articles du plus récent au plus ancien
-          response.articles.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          this.sortArticlesByDate(response.articles, false);
         } else {
           // Trier les articles du plus ancien au plus récent
-          response.articles.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+          this.sortArticlesByDate(response.articles, true);
         }
         return response;
       })
@@ -58,13 +58,19 @@ export class ListComponent {
     this.router.navigate(['/articles/detail', articleId]);
   }
 
-  sortArticles(response: ArticlesResponse): void {
-    if (this.newersFirst) {
-      // Trier les articles du plus récent au plus ancien
-      response.articles.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-    } else {
-      // Trier les articles du plus ancien au plus récent
-      response.articles.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-    }
+  sortArticlesByDate(articles: Article[], ascending: boolean = true): Article[] {
+    // Utilisez la méthode `sort` pour trier le tableau d'articles
+    return articles.sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+  
+      if (ascending) {
+        // Tri croissant (du plus ancien au plus récent)
+        return dateA - dateB;
+      } else {
+        // Tri décroissant (du plus récent au plus ancien)
+        return dateB - dateA;
+      }
+    });
   }
 }

@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MessageResponse } from 'src/app/features/themes/interfaces/api/messageResponse.interface';
 import { Router } from '@angular/router';
 import { SessionService } from 'src/app/services/session.service';
+import { fi } from 'date-fns/locale';
 
 @Component({
   selector: 'app-me',
@@ -37,7 +38,7 @@ export class MeComponent implements OnInit {
   }
 
 
-  public submit(): void {
+  /* public submit(): void {
     console.log("this.userForm :", this.userForm); 
     const userData : UserResponse = {
       userName: this.userForm!.get('userName')?.value,
@@ -53,6 +54,48 @@ export class MeComponent implements OnInit {
         console.error("Erreur lors de l'appel au backend:", error);
       }
     );
+    }
+  } */
+  
+  public submit(): void {
+    const newEmail = this.userForm!.get('email')?.value;
+  
+    if (this.user && newEmail !== this.user.email) {
+      // L'e-mail a été modifié, affichez la boîte de dialogue de confirmation
+      const confirmMessage = 'En changeant d\'email, vous serez déconnecté de l\'application et vous devrez vous connecter avec votre nouvel email. Continuer ?';
+      if (confirm(confirmMessage)) {
+        const userData: UserResponse = {
+          userName: this.userForm!.get('userName')?.value,
+          email: newEmail,
+        };
+        this.authService.update(this.user.id, userData).subscribe(
+          (result: UserResponse) => {
+            this.openSnackBar("Profil modifié avec succès", result ? 'Succès' : 'Erreur');
+            // Déconnectez l'utilisateur après la mise à jour de l'e-mail
+            this.logout();
+          },
+          (error) => {
+            console.error("Erreur lors de l'appel au backend:", error);
+          }
+        );
+      }
+    } else {
+      // L'e-mail n'a pas été modifié, procédez normalement
+      const userData: UserResponse = {
+        userName: this.userForm!.get('userName')?.value,
+        email: newEmail,
+      };
+     if(this.user) {
+      this.authService.update(this.user.id, userData).subscribe(
+        (result: UserResponse) => {
+          this.openSnackBar("Profil modifié avec succès", result ? 'Succès' : 'Erreur');
+        },
+        (error) => {
+          console.error("Erreur lors de l'appel au backend:", error);
+        }
+      );
+     }
+      
     }
   }
 
