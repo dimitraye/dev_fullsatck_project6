@@ -56,22 +56,11 @@ export class DetailComponent implements OnInit {
       content: this.commentaryForm.value.content
     } as MessageRequest;
     console.log("commentary : ", commentary)
-
-    this.commentariesService.send(commentary).subscribe(
-      (messageResponse: MessageResponse) => {
-        this.initCommentaryForm();
-        this.matSnackBar.open(messageResponse.message, "Close", { duration: 3000 });
-      });
-
-
-      const userName = this.sessionService.user?.userName;
+    const userName = this.sessionService.user?.userName;
 
   if (userName) { // Vérifiez si userName est défini
     this.commentariesService.send(commentary).subscribe(
       (messageResponse: MessageResponse) => {
-        
-
-
         const createdAtString = new Date().toLocaleString();
         // Ajoutez le nouveau commentaire à la liste
         this.article!.commentaries.unshift({
