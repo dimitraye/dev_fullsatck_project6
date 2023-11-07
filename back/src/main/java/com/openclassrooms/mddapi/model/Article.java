@@ -25,6 +25,7 @@ public class Article {
     private Long id;
 
     private String title;
+    @Column(length = 2000)
     private String content;
 
     @ManyToOne
