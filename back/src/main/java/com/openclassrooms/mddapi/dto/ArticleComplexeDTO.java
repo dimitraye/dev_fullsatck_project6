@@ -19,11 +19,8 @@ public class ArticleComplexeDTO {
     private String title;
     private String content;
     private String theme;
-
     private String createdAt;
-
     private String userName;
-
     private Set<CommentaryDTO> commentaries = new HashSet<>();
 
     public ArticleComplexeDTO(Article article) {

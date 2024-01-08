@@ -15,7 +15,6 @@ public class ArticleDTO {
     private String title;
     private String content;
     private Long theme_id;
-
     public ArticleDTO(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();

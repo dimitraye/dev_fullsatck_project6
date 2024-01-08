@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Entity class representing a user.
+ **/
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,10 +38,6 @@ public class User {
     private String email;
     private  String userName;
     private String password;
-
-    /*@OneToMany
-    @JsonIgnore
-    private Set<Theme> themes = new HashSet<>();*/
 
     @JsonIgnore
     @ManyToMany

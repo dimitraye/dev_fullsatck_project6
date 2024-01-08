@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * Manage the requests linked to a user
+ * Manage the requests linked to an article
  */
 @Slf4j
 @AllArgsConstructor
@@ -31,32 +31,18 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/articles")
 public class ArticleController {
 
-    ArticleService articleService;
-    UserService userService;
+    private ArticleService articleService;
+    private UserService userService;
 
-    ThemeService themeService;
-
+    private ThemeService themeService;
 
     /**
-     * Find all the rentals when calling this endpoint
-     * @return a list of rentals
+     * Retrieves all articles for the authenticated user, sorted by creation date in descending order.
+     *
+     * @param principal The authenticated user's Principal object.
+     * @return ResponseEntity containing a map with a list of sorted articles.
+     * @see ArticleService#findArticlesByThemesWithDetails(Set)
      */
-    /*@GetMapping
-    public ResponseEntity<?> findAll(Principal principal) {
-        String email = principal.getName();
-
-        Optional<User> user = userService.findByEmail(email);
-
-        if (user.isEmpty()) {
-            return ResponseEntity.badRequest().body("User not found");
-        }
-
-        Set<ArticleSimpleDTO> articles = articleService.findArticlesByThemesWithDetails(user.get().getThemes());
-
-        //List<ArticleComplexeDTO> articlesCompDto = articles.stream().map(article -> new ArticleComplexeDTO(article)).collect(Collectors.toList());
-        return new ResponseEntity<>(Map.of("articles", articles), HttpStatus.OK);
-    }*/
-
     @GetMapping
     public ResponseEntity<?> findAll(Principal principal) {
         String email = principal.getName();
@@ -69,7 +55,6 @@ public class ArticleController {
 
         Set<ArticleSimpleDTO> articles = articleService.findArticlesByThemesWithDetails(user.get().getThemes());
 
-        // Triez les articles par date de création (décroissante)
         List<ArticleSimpleDTO> sortedArticles = articles.stream()
                 .sorted(Comparator.comparing(ArticleSimpleDTO::getCreatedAt).reversed())
                 .collect(Collectors.toList());
@@ -77,12 +62,13 @@ public class ArticleController {
         return new ResponseEntity<>(Map.of("articles", sortedArticles), HttpStatus.OK);
     }
 
-    /*@GetMapping
-    public ResponseEntity<List<Article>> findAll() {
-        List<Article> articles = articleService.getAll();
-        return new ResponseEntity<>(articles, HttpStatus.OK);
-    }*/
-
+    /**
+     * Retrieves a specific article by its ID.
+     *
+     * @param id The ID of the article to retrieve.
+     * @return ResponseEntity containing the requested article information.
+     * @see ArticleService#getById(Long)
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> find(@PathVariable Long id){
         Article articleFromDB = articleService.getById(id).orElse(null);
@@ -96,6 +82,14 @@ public class ArticleController {
         return new ResponseEntity<>(new ArticleComplexeDTO(articleFromDB), HttpStatus.OK);
     }
 
+    /**
+     * Adds a new article for the authenticated user.
+     *
+     * @param articleDTO  Data Transfer Object containing article information.
+     * @param principal   The authenticated user's Principal object.
+     * @return ResponseEntity containing information about the newly added article.
+     * @see ArticleService#save(Article)
+     */
     @PostMapping
     public ResponseEntity<?> addArticle(@RequestBody ArticleDTO articleDTO, Principal principal) {
 

@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.model.SecurityUser;
 
+
 /**
- * Service Spring Security qui gère l'authentification sécurisée du user
+ * Service class for managing security-related operations like the user's authtication.
  */
 @Service
 public class JpaUserDetailsService implements UserDetailsService{

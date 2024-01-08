@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-
+/**
+ * Repository interface for managing user-related database operations.
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     /**
@@ -17,10 +19,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return the user.
      */
     Optional<User> findByEmail (String email);
-
-    @Query(value = "SELECT * FROM users u " +
-            "LEFT JOIN user_themes ut ON u.id = ut.user_id " +
-            "LEFT JOIN theme t ON ut.theme_id = t.id " +
-            "WHERE u.email = :email", nativeQuery = true)
-    Optional<User> findByEmailWithThemes (@Param("email") String email);
 }

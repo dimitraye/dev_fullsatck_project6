@@ -8,7 +8,7 @@ public class DateTimeConversionUtil {
         // Crée un formateur de date avec le format "yyyy/MM/dd"
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-        // Utilisez le formateur pour convertir LocalDateTime en String
+        // Utilise le formateur pour convertir LocalDateTime en String
         String formattedDate = localDateTime.format(formatter);
 
         return formattedDate;
