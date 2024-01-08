@@ -21,7 +21,7 @@ import java.util.Optional;
 
 
 /**
- * Manage the requests linked to a user
+ * Manage the requests linked to a Message
  */
 @Slf4j
 @AllArgsConstructor
@@ -33,6 +33,15 @@ public class MessageController {
 
     private ArticleService articleService;
 
+    /**
+     * Adds a new commentary using the provided commentary response object.
+     *
+     * @param commentaryResponse The CommentaryResponse object containing information about the commentary.
+     * @return ResponseEntity with a success message if the commentary is added successfully.
+     * @see UserService#getUserById(Long)
+     * @see ArticleService#getById(Long)
+     * @see CommentaryService#save(Commentary)
+     */
     @PostMapping
     public ResponseEntity<?> addMessage(@RequestBody CommentaryResponse commentaryResponse) {
 
@@ -47,7 +56,6 @@ public class MessageController {
             return ResponseEntity.badRequest().body("User not found");
         }
 
-
         Optional<Article> articleFromDB = articleService.getById(commentaryResponse.getArticle_id());
 
         if (articleFromDB.isEmpty()) {
@@ -60,11 +68,9 @@ public class MessageController {
         commentary.setArticle((articleFromDB.get()));
         commentary.setContent(commentaryResponse.getContent());
 
-
         Commentary commentaryDB = null;
         try {
             commentaryDB = commentaryService.save(commentary);
-            //Envoie un message sur la page de redirection
         } catch (Exception e) {
             log.error("Unable to save commentary.", e);
             return ResponseEntity.badRequest().body("Unable to save commentary.");
@@ -72,7 +78,13 @@ public class MessageController {
         return  new ResponseEntity<>(Map.of("message", "Commentaire ajouté"), HttpStatus.CREATED);
     }
 
-    //TODO : getCommentariesByArticleId
+    /**
+     * Retrieves all commentaries for a given article ID.
+     *
+     * @param id The ID of the article for which commentaries are retrieved.
+     * @return ResponseEntity with a list of commentaries if retrieval is successful.
+     * @see CommentaryService#getAllByArticle_Id(Long)
+     */
     @GetMapping("/{id}")
     public ResponseEntity<List<Commentary>> findAllCommentariesByArticleId(@PathVariable Long id) {
         List<Commentary> commentaries = commentaryService.getAllByArticle_Id(id);

@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+/**
+ * Repository interface for managing commentary-related database operations.
+ */
 @Repository
 public interface CommentaryRepository extends JpaRepository<Commentary, Long> {
 

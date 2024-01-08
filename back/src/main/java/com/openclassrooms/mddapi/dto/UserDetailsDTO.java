@@ -18,9 +18,7 @@ import java.util.Set;
 public class UserDetailsDTO {
     private Long id;
     private String email;
-
     private String userName;
-
     private Set<Theme> themes = new HashSet<>();
 
 
@@ -32,5 +30,4 @@ public class UserDetailsDTO {
             this.themes = user.getThemes();
         }
     }
-
 }

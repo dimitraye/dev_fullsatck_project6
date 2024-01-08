@@ -1,7 +1,6 @@
 package com.openclassrooms.mddapi.controller;
 
 
-import com.openclassrooms.mddapi.model.Commentary;
 import com.openclassrooms.mddapi.model.Theme;
 import com.openclassrooms.mddapi.service.ThemeService;
 import lombok.AllArgsConstructor;
@@ -16,7 +15,7 @@ import java.util.Map;
 
 
 /**
- * Manage the requests linked to a user
+ * Manage the requests linked to a Theme
  */
 @Slf4j
 @AllArgsConstructor
@@ -24,11 +23,14 @@ import java.util.Map;
 @RequestMapping("/api/themes")
 public class ThemeController {
 
-    ThemeService themeService;
+    private ThemeService themeService;
 
     /**
-     * Find all the rentals when calling this endpoint
-     * @return a list of rentals
+     * Retrieves all themes when calling this endpoint.
+     *
+     * @param principal The authenticated user's Principal object.
+     * @return ResponseEntity with a list of themes if retrieval is successful.
+     * @see ThemeService#getAll()
      */
     @GetMapping
     public ResponseEntity<?> findAll(Principal principal) {
@@ -36,6 +38,13 @@ public class ThemeController {
         return new ResponseEntity<>(Map.of("themes",themes), HttpStatus.OK);
     }
 
+    /**
+     * Adds a new theme using the provided theme object.
+     *
+     * @param theme The Theme object containing information about the theme to be added.
+     * @return ResponseEntity with the added theme if successful.
+     * @see ThemeService#save(Theme)
+     */
     @PostMapping
     public ResponseEntity<?> addMessage(@RequestBody Theme theme) {
         themeService.save(theme);

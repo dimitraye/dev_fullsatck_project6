@@ -139,19 +139,6 @@ public class MddApiApplication {
 		return users;
 	}
 
-	/*public List<Article> generateSampleArticles() {
-		List<Article> articles = new ArrayList<>();
-
-		for (int i = 1; i <= 5; i++) { // Par exemple, générez 5 articles
-			Article article = new Article();
-			article.setTitle("Article " + i);
-			article.setContent("Contenu de l'article " + i);
-			articles.add(article);
-		}
-
-		return articles;
-	}*/
-
 	public List<Article> generateSampleArticles() {
 		List<Article> articles = new ArrayList<>();
 		Random random = new Random();

@@ -6,6 +6,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.openclassrooms.mddapi.service.JpaUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,17 +21,16 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import com.openclassrooms.mddapi.service.JpaUserDetailsService;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-
+/**
+ * The SecurityConfig class configures the security settings for the application.
+ * It defines security filters, authorization rules, and authentication mechanisms.
+ */
 @AllArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -41,17 +41,23 @@ public class SecurityConfig {
 
 
 
+    /**
+     * Configures the security filter chain.
+     *
+     * @param http HttpSecurity object for configuring security settings.
+     * @return SecurityFilterChain configured with rules for various endpoints.
+     * @throws Exception if there is an error in configuring security settings.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors() // Activer la configuration CORS
+                .cors()
                 .and()
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests( auth -> auth
                         .antMatchers("/h2-console/**").permitAll()
                         .antMatchers("/api/auth/register").permitAll()
                         .antMatchers("/api/auth/login").permitAll()
-                        //Any other request need to be authentified
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions().sameOrigin())
@@ -61,11 +67,21 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * Configures the JwtDecoder bean using the RSA public key.
+     *
+     * @return JwtDecoder configured with the RSA public key.
+     */
     @Bean
     JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
     }
 
+    /**
+     * Configures the JwtEncoder bean using the RSA public and private keys.
+     *
+     * @return JwtEncoder configured with the RSA public and private keys.
+     */
     @Bean
     JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
@@ -73,18 +89,26 @@ public class SecurityConfig {
         return new NimbusJwtEncoder(jwks);
     }
 
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    /**
+     * Configures the PasswordEncoder bean for encoding passwords.
+     *
+     * @return BCryptPasswordEncoder as the PasswordEncoder.
+     */
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-
+    /**
+     * Configures the CORS settings for the application.
+     *
+     * @return CorsConfigurationSource configured with permitted origins and methods.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.applyPermitDefaultValues();
 
-        // Autoriser les requêtes en provenance du port 4200
         corsConfig.addAllowedOrigin("http://localhost:4200");
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
@@ -92,17 +116,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", corsConfig);
         return source;
     }
-
-    /*@Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200")); // Autorise les requêtes depuis http://localhost:4200
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowCredentials(true); // Si vous utilisez des cookies ou des en-têtes d'authentification
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Appliquez la configuration CORS à toutes les routes
-
-        return source;
-    }*/
 }

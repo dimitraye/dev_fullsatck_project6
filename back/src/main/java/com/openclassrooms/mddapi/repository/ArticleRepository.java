@@ -11,7 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Set;
 
-
+/**
+ * Repository interface for managing article-related database operations.
+ */
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 

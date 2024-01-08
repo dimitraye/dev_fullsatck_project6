@@ -8,6 +8,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Entity class representing a commentaru.
+ **/
 @Entity
 @Getter
 @Setter

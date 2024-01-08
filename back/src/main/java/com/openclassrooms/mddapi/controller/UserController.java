@@ -34,10 +34,13 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     /**
-     * Manage the user registration
-     * @param user
-
-     * @return
+     * Handles user registration by saving the user information to the database.
+     *
+     * @param user User object containing registration information.
+     * @return ResponseEntity with a token if registration is successful.
+     * @see UserService#findByEmail(String)
+     * @see UserService#save(User)
+     * @see UserService#generateToken(String)
      */
     @PostMapping("/register")
     public ResponseEntity<?> save(@RequestBody User user) {
@@ -56,7 +59,6 @@ public class UserController {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        //sauvegarde du user
         try {
             userService.save(user);
             //Envoie un message sur la page de redirection
@@ -65,12 +67,19 @@ public class UserController {
             return ResponseEntity.badRequest().body("Unable to save user.");
         }
 
-        //creation du token
         String generateToken = userService.generateToken(user.getEmail());
         return ResponseEntity.ok(Collections.singletonMap("token", generateToken));
     }
 
-
+    /**
+     * Handles user login by validating credentials and providing a token upon successful login.
+     *
+     * @param loginForm Map containing user email and password.
+     * @return ResponseEntity with a token if login is successful.
+     * @see UserService#findByEmail(String)
+     * @see PasswordEncoder#matches(CharSequence, String)
+     * @see UserService#generateToken(String)
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginForm) {
         String email = loginForm.get("email");
@@ -87,20 +96,21 @@ public class UserController {
             return ResponseEntity.badRequest().body("User isn't registered.");
         }
 
-        //Vérification du password
         if (!passwordEncoder.matches(password, userFromDB.get().getPassword())){
             return ResponseEntity.badRequest().body("Email or Password is incorrect.");
         }
 
-        //creation du token
         String generateToken = userService.generateToken(email);
         return ResponseEntity.ok(Collections.singletonMap("token", generateToken));
     }
 
     /**
-     * Return the login  page
-     * @param principal
-     * @return
+     * Retrieves user details for the authenticated user.
+     *
+     * @param principal The authenticated user's Principal object.
+     * @return ResponseEntity with user details if the user is found.
+     * @see UserService#findByEmail(String)
+     * @see UserDetailsDTO
      */
     @GetMapping("/me")
     public ResponseEntity<?> me(Principal principal) {
@@ -115,6 +125,16 @@ public class UserController {
         return new ResponseEntity<>(new UserDetailsDTO(user.get()), HttpStatus.OK);
     }
 
+    /**
+     * Adds a theme subscription for the authenticated user.
+     *
+     * @param id        The ID of the theme to subscribe to.
+     * @param principal The authenticated user's Principal object.
+     * @return ResponseEntity with a message if the subscription is successful.
+     * @see UserService#findByEmail(String)
+     * @see ThemeService#findById(Long)
+     * @see UserService#save(User)
+     */
     @GetMapping("/themes/{id}")
     public ResponseEntity<?> addTheme(@PathVariable Long id, Principal principal) {
 
@@ -136,18 +156,21 @@ public class UserController {
 
         try {
             userService.save(user.get());
-            //Envoie un message sur la page de redirection
-            //creation du token
             return ResponseEntity.ok(Map.of("message", "Abonnement créé"));
         } catch (Exception e) {
             log.error("Unable to save user.", e);
             return ResponseEntity.badRequest().body("Unable to save user.");
         }
-
-
     }
 
 
+    /**
+     * Retrieves user details for a specified user ID.
+     *
+     * @param id The ID of the user to retrieve details for.
+     * @return ResponseEntity with user details if the user is found.
+     * @see UserService#getUserById(Long)
+     */
     @GetMapping("/user/{id}")
     public ResponseEntity<UserDetailsDTO> getUser(@PathVariable Long id) {
         Optional<User> userFromDBOpt = userService.getUserById(id);
@@ -167,6 +190,15 @@ public class UserController {
         return ResponseEntity.ok(userDetailsDTO);
     }
 
+    /**
+     * Updates user information for a specified user ID.
+     *
+     * @param id   The ID of the user to update.
+     * @param user User object containing updated user information.
+     * @return ResponseEntity with the updated user information if successful.
+     * @see UserService#getUserById(Long)
+     * @see UserService#update(User)
+     */
     @PutMapping("/user/{id}")
     public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody User user) {
 
@@ -183,12 +215,20 @@ public class UserController {
         userFromDB.setUserName(user.getUserName());
         userFromDB.setEmail(user.getEmail());
 
-
         log.info("Updating a user");
         return new ResponseEntity<>(userService.update(userFromDB), HttpStatus.OK);
     }
 
-    //TODO : removeFromSub
+    /**
+     * Removes a theme subscription for the authenticated user.
+     *
+     * @param id        The ID of the theme to unsubscribe from.
+     * @param principal The authenticated user's Principal object.
+     * @return ResponseEntity with a message if the unsubscription is successful.
+     * @see UserService#findByEmail(String)
+     * @see ThemeService#findById(Long)
+     * @see UserService#save(User)
+     */
     @PutMapping("/themes/{id}")
     public ResponseEntity<?> removeTheme(@PathVariable Long id, Principal principal) {
 
@@ -206,9 +246,9 @@ public class UserController {
             return ResponseEntity.badRequest().body("Theme not found");
         }
 
-        Set<Theme> themes = user.get().getThemes();/* initialisez votre liste ici */;
+        Set<Theme> themes = user.get().getThemes();
 
-        long idToDelete = id; // Remplacez 42 par l'ID de l'objet que vous souhaitez supprimer
+        long idToDelete = id;
 
         themes = themes.stream()
                 .filter(theme -> theme.getId() != idToDelete)
@@ -223,28 +263,30 @@ public class UserController {
             log.error("Unable to delete the user's theme", e);
             return ResponseEntity.badRequest().body("Unable to save user.");
         }
-
-
     }
 
+    /**
+     * Retrieves the list of themes subscribed by the authenticated user.
+     *
+     * @param principal The authenticated user's Principal object.
+     * @return ResponseEntity with the list of subscribed theme names.
+     * @see UserService#findByEmail(String)
+     */
+    @GetMapping("/user/themes")
+    public ResponseEntity<?> getUserThemes(Principal principal) {
+        String email = principal.getName();
 
-        @GetMapping("/user/themes")
-        public ResponseEntity<?> getUserThemes(Principal principal) {
-            String email = principal.getName();
+        Optional<User> user = userService.findByEmail(email);
 
-            Optional<User> user = userService.findByEmail(email);
-
-            if (user.isEmpty()) {
-                return ResponseEntity.badRequest().body("User not found");
-            }
-
-            Set<Theme> themes = user.get().getThemes();
-            List<String> themeNames = themes.stream()
-                    .map(Theme::getTitle)
-                    .collect(Collectors.toList());
-
-            return ResponseEntity.ok(themeNames);
+        if (user.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
         }
 
+        Set<Theme> themes = user.get().getThemes();
+        List<String> themeNames = themes.stream()
+                .map(Theme::getTitle)
+                .collect(Collectors.toList());
 
+        return ResponseEntity.ok(themeNames);
+    }
 }
