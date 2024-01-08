@@ -34,17 +34,15 @@ export class FormComponent implements OnInit {
   }
 
   public submit(): void {
-    console.log("this.articleForm :", this.articleForm); 
     let selectedTheme : Theme | undefined;; 
     this.themes$.subscribe((themesResponse: ThemesResponse) => {
       selectedTheme = themesResponse.themes.find((theme) => theme.title === this.articleForm?.get('theme')?.value);
            if (selectedTheme) {
         const articleData: ArticleCreate = {
           title: this.articleForm!.get('title')?.value,
-          theme_id: selectedTheme.id, // Utilisez l'ID du thème
+          theme_id: selectedTheme.id, 
           content: this.articleForm!.get('content')?.value
         };
-        console.log("articleData :", articleData);
         this.articlesService
           .create(articleData)
           .subscribe((articleResponse: ArticleResponseCreate) => this.exitPage(articleResponse));

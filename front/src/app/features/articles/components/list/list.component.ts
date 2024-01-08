@@ -26,8 +26,6 @@ export class ListComponent {
     
     this.articles$ = this.articlesService.all().pipe(
       map((response: ArticlesResponse) => {
-        console.log("response", response);
-        //this.sortArticles(response);
         return response;
       })
     );
@@ -42,10 +40,8 @@ export class ListComponent {
     this.articles$ = this.articles$.pipe(
       map((response: ArticlesResponse) => {
         if (this.newersFirst) {
-          // Trier les articles du plus récent au plus ancien
           this.sortArticlesByDate(response.articles, false);
         } else {
-          // Trier les articles du plus ancien au plus récent
           this.sortArticlesByDate(response.articles, true);
         }
         return response;
@@ -54,21 +50,17 @@ export class ListComponent {
   }
 
   navigateToDetail(articleId  : number) {
-    console.log("in navigate :", articleId)
     this.router.navigate(['/articles/detail', articleId]);
   }
 
   sortArticlesByDate(articles: Article[], ascending: boolean = true): Article[] {
-    // Utilisez la méthode `sort` pour trier le tableau d'articles
     return articles.sort((a, b) => {
       const dateA = new Date(a.createdAt).getTime();
       const dateB = new Date(b.createdAt).getTime();
   
       if (ascending) {
-        // Tri croissant (du plus ancien au plus récent)
         return dateA - dateB;
       } else {
-        // Tri décroissant (du plus récent au plus ancien)
         return dateB - dateA;
       }
     });

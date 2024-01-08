@@ -25,7 +25,6 @@ export class LoginComponent  {
 
   public submit(): void {
     const loginRequest = this.form.value as LoginRequest;
-    console.log("loginRequest", loginRequest);
     this.authService.login(loginRequest).subscribe(
       (response: AuthSuccess) => {
         localStorage.setItem('token', response.token);
