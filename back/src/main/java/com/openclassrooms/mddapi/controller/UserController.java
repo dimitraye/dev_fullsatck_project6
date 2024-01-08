@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 public class UserController {
 
-    UserService userService;
-    ThemeService themeService;
+    private UserService userService;
+    private ThemeService themeService;
 
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Handles user registration by saving the user information to the database.
@@ -61,7 +61,6 @@ public class UserController {
 
         try {
             userService.save(user);
-            //Envoie un message sur la page de redirection
         } catch (Exception e) {
             log.error("Unable to save user.", e);
             return ResponseEntity.badRequest().body("Unable to save user.");
