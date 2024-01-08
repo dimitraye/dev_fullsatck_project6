@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,7 @@ public class ThemeController {
      * @see ThemeService#getAll()
      */
     @GetMapping
-    public ResponseEntity<?> findAll(Principal principal) {
+    public ResponseEntity<?> findAll() {
         List<Theme> themes = themeService.getAll();
         return new ResponseEntity<>(Map.of("themes",themes), HttpStatus.OK);
     }

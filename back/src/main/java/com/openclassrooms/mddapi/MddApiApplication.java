@@ -143,12 +143,12 @@ public class MddApiApplication {
 		List<Article> articles = new ArrayList<>();
 		Random random = new Random();
 
-		for (int i = 1; i <= 5; i++) { // Par exemple, générez 5 articles
+		for (int i = 1; i <= 5; i++) {
 			Article article = new Article();
 			article.setTitle("Article " + i);
 			article.setContent("Contenu de l'article " + i);
 
-			// Générez des dates aléatoires pour le jour et le mois
+			// Générer des dates aléatoires pour le jour et le mois
 			int randomYear = 2023; // L'année reste la même
 			int randomMonth = random.nextInt(12) + 1; // De 1 à 12 (mois)
 			int randomDay = random.nextInt(28) + 1; // De 1 à 28 (jours)
@@ -160,16 +160,6 @@ public class MddApiApplication {
 		}
 
 		return articles;
-	}
-
-	public List<Commentary> generateSampleCommentaries_() {
-		List<Commentary> commentaries = new ArrayList<>();
-
-		Commentary commentary1 = new Commentary();
-		commentary1.setContent("Contenu du commentaire 1");
-
-		commentaries.add(commentary1);
-		return commentaries;
 	}
 
 	public List<Commentary> generateSampleCommentaries() {

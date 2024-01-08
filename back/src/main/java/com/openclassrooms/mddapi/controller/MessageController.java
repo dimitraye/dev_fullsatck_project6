@@ -68,9 +68,9 @@ public class MessageController {
         commentary.setArticle((articleFromDB.get()));
         commentary.setContent(commentaryResponse.getContent());
 
-        Commentary commentaryDB = null;
+        //Commentary commentaryDB = null;
         try {
-            commentaryDB = commentaryService.save(commentary);
+            //commentaryDB = commentaryService.save(commentary);
         } catch (Exception e) {
             log.error("Unable to save commentary.", e);
             return ResponseEntity.badRequest().body("Unable to save commentary.");

@@ -1,9 +1,7 @@
 package com.openclassrooms.mddapi.service;
 
 
-import com.openclassrooms.mddapi.model.Article;
 import com.openclassrooms.mddapi.model.Commentary;
-import com.openclassrooms.mddapi.repository.ArticleRepository;
 import com.openclassrooms.mddapi.repository.CommentaryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
