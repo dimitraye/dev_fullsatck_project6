@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { User } from 'src/app/interfaces/user.interface';
-import { SessionService } from 'src/app/services/session.service';
 import { ThemesService } from '../../services/themes.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
@@ -26,7 +24,7 @@ export class ListComponent {
 
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
-      duration: 3000, // Durée d'affichage de la notification en millisecondes (3 secondes dans cet exemple)
+      duration: 3000, 
     });
   }
 

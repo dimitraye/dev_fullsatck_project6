@@ -27,10 +27,8 @@ export class RegisterComponent {
 
   public submit(): void {
     const registerRequest = this.form.value as RegisterRequest;
-    console.log("registerRequest", registerRequest);
     this.authService.register(registerRequest).subscribe(
       (response: AuthSuccess) => {
-        console.log('Réponse du backend:', response);
         localStorage.setItem('token', response.token);
         this.authService.me().subscribe((user: User) => {
           this.sessionService.logIn(user);

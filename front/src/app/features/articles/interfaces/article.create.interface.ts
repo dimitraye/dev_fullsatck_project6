@@ -1,4 +1,3 @@
-import { Comment } from "./comment.interface";
 
 export interface ArticleCreate {
     title: string;

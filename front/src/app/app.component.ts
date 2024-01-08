@@ -44,7 +44,6 @@ export class AppComponent implements OnInit {
   }
 
   isAuthPage(): Observable<boolean> {
-    // Vérifie si l'URL courante correspond à la page de login ou d'inscription
     return new Observable(observer => {
       observer.next(this.router.url === '/login' || this.router.url === '/register');
       observer.complete();
